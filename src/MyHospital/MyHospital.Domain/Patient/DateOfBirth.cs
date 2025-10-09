@@ -14,7 +14,7 @@ namespace MyHospital.Domain.Patient
         {
             if (value > DateTime.Now)
             {
-                throw new ArgumentException("DateOfBirth cannot be in the future.");
+                throw new ArgumentException("Дата рождения не может быть в будущем");
             }
 
             Value = value;

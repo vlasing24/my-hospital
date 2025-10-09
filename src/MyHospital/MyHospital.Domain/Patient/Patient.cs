@@ -18,4 +18,9 @@ public class Patient
         InsuranceNumber = insuranceNumber;
         ContactInfo = contactInfo;
     }
+
+    public override string ToString()
+    {
+        return $"Пациент ID: {ID}, Имя: {FullName}";
+    }
 }

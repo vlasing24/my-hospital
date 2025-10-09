@@ -58,6 +58,6 @@ namespace MyHospital.Domain.Patient
             return HashCode.Combine(Email, PhoneNumber);
         }
 
-        public override string ToString() => $"Email: {Email}, Phone: {PhoneNumber}";
+        public override string ToString() => $"Почта: {Email}, Телефон: {PhoneNumber}";
     }
 }

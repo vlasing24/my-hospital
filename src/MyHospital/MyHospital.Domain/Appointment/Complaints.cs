@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyHospital.Domain.Patient
+namespace MyHospital.Domain.Appointment
 {
-    public readonly struct FullName
+    public readonly struct Complaints
     {
         public string Value { get; }
 
-        public FullName(string value)
+        public Complaints(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Полное имя не может быть нулевым или пустым.");
+                throw new ArgumentException("Жалобы не могут быть пустыми.");
             }
 
             Value = value;
@@ -25,3 +25,4 @@ namespace MyHospital.Domain.Patient
             return Value;
         }
     }
+}
