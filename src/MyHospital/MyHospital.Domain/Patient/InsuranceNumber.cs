@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MyHospital.Domain.Patient
@@ -17,6 +18,13 @@ namespace MyHospital.Domain.Patient
                 throw new ArgumentException("Страховой номер не может быть нулевым или пустым.");
             }
 
+            string omsRegex = @"^\d{16}$";
+
+            if (!Regex.IsMatch(value, omsRegex))
+            {
+                throw new ArgumentException("Неверный формат страхового номера ОМС. Должно быть 16 цифр.");
+            }
+
             Value = value;
         }
 
@@ -25,3 +33,4 @@ namespace MyHospital.Domain.Patient
             return Value;
         }
     }
+}
