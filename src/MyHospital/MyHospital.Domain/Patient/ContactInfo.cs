@@ -78,6 +78,7 @@ namespace MyHospital.Domain.Patient
                 return Result.Failure<Email>("Email не может быть пустым");
             }
 
+            // Регулярное выражение для валидации email
             string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(email, emailRegex))
             {
@@ -128,6 +129,8 @@ namespace MyHospital.Domain.Patient
                 return Result.Failure<PhoneNumber>("Номер телефона не может быть пустым");
             }
 
+            // Регулярное выражение для валидации номера телефона
+            // Примечание: это простой пример, реальные требования могут быть сложнее
             string phoneRegex = @"^(\+?\d{1,3})?[-.\s]?(\(\d{1,}\))?[-.\s]?[\d-.\s]{3,}$";
             if (!Regex.IsMatch(phoneNumber, phoneRegex))
             {
