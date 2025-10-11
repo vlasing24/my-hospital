@@ -6,23 +6,22 @@ using System.Threading.Tasks;
 
 namespace MyHospital.Domain.Doctor
 {
-    public readonly struct Specialization
+    public class Specialization
     {
-        public string Value { get; }
+        public string Value { get; private set; }
 
-        public Specialization(string value)
+        private Specialization(string value)
+        {
+            Value = value;
+        }
+
+        public static Specialization Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException("Специализация не может быть пустой.");
             }
-
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return Value;
+            return new Specialization(value);
         }
     }
 }

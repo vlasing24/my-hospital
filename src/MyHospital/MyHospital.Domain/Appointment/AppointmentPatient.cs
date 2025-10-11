@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace MyHospital.Domain.Appointment
 {
-    public class DoctorA
+    public class AppointmentPatient
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
-        public string Specialization { get; private set; }
 
-        public DoctorA(string name, string specialization)
+        public PatientA(string name)
         {
             Id = Guid.NewGuid();
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Specialization = specialization ?? throw new ArgumentNullException(nameof(specialization));
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Имя пациента не может быть пустым.");
+            }
+
+            Name = name;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace MyHospital.Domain.Doctor;
 public class Doctor
 {
     public DoctorID ID { get; private set; }
-    public FullNameD FullName { get; set; }
+    public DoctorFullName FullName { get; set; }
     public Specialization Specialization { get; set; }
     public Category Category { get; set; }
     public Account Credentials { get; set; }

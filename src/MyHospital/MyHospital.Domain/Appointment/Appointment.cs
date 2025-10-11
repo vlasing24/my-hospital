@@ -5,24 +5,23 @@ namespace MyHospital.Domain.Appointment;
 public class Appointment
 {
     public Number Nb { get; private set; }
-    public PatientA PatientA { get; private set; }
-    public DoctorA DoctorA { get; private set; }
-    public DateTime DateTime { get; private set; }
+    public AppointmentPatient PatientA { get; private set; }
+    public AppointmentDoctor DoctorA { get; private set; }
+    public AppointmentDate DateTime { get; private set; }
     public Complaints Complaints { get; private set; }
     public PreliminaryDiagnosis PreliminaryDiagnosis { get; private set; }
 
-    public Appointment(PatientA patient, DoctorA doctor, ValueObjects.DateTime appointmentDateTime, ValueObjects.Complaints complaints)
+    public Appointment(AppointmentPatient patient, AppointmentDoctor doctor, ValueObjects.DateTime appointmentDateTime, ValueObjects.Complaints complaints)
     {
         Nb = Guid.NewGuid();
-        PatientA = patient ?? throw new ArgumentNullException(nameof(patient));
-        DoctorA = doctor ?? throw new ArgumentNullException(nameof(doctor));
-        DateTime = appointmentDateTime ?? throw new ArgumentNullException(nameof(appointmentDateTime));
-        Complaints = complaints ?? throw new ArgumentNullException(nameof(complaints));
+        PatientA = patient;
+        DoctorA = doctor;
+        DateTime = appointmentDateTime;
+        Complaints = complaints;
     }
 
     public void UpdatePreliminaryDiagnosis(ValueObjects.PreliminaryDiagnosis diagnosis)
     {
-        PreliminaryDiagnosis = diagnosis ?? throw new ArgumentNullException(nameof(diagnosis));
+        PreliminaryDiagnosis = diagnosis;
     }
-}
 }
