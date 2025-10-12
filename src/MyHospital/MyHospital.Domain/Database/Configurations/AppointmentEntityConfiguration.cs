@@ -11,12 +11,12 @@ namespace MyHospital.Domain.Database.Configurations
 
             builder.HasKey(x => x.Id).HasName("pk_appointment");
 
-            builder.Property(a => a.PatientId).HasColumnName("patient_id").HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(a => a.DoctorId).HasColumnName("doctor_id").HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(a => a.Date).HasColumnName("date").HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(a => a.Diagnosis).HasColumnName("diagnosis").HasMaxLength(255).HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
+            builder.Property(a => a.PatientId).HasColumnName("patient_id").HasConversion(toDb => toDb.Value, fromDb => PatientID.Create(fromDb));
+            builder.Property(a => a.DoctorId).HasColumnName("doctor_id").HasConversion(toDb => toDb.Value, fromDb => DoctorID.Create(fromDb));
+            builder.Property(a => a.Date).HasColumnName("date").HasConversion(toDb => toDb.Value, fromDb => Date.Create(fromDb));
+            builder.Property(a => a.Diagnosis).HasColumnName("diagnosis").HasConversion(toDb => toDb.Value, fromDb => Diagnosis.Create(fromDb));
 
-            builder.Property(a => a.Comments).HasColumnName("comments").HasColumnType("jsonb").HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
+            builder.Property(a => a.Comments).HasColumnName("complaints").HasMaxLength(MAX_LENGTH).HasColumnType("jsonb").HasConversion(toDb => toDb.Value, fromDb => Complaints.Create(fromDb));
 
             builder.HasOne(a => a.Patient)
                 .WithMany(p => p.Appointments)

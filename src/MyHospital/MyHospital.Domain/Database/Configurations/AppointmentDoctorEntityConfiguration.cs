@@ -11,10 +11,10 @@ namespace MyHospital.Domain.Database.Configurations
 
             builder.HasKey(d => d.Id).HasName("pk_doctors");
 
-            builder.Property(d => d.Id).HasColumnName("id").HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(d => d.Account).HasColumnName("account").HasMaxLength(255).HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(d => d.Category).HasColumnName("category").HasMaxLength(100).HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
-            builder.Property(d => d.Specialization).HasColumnName("specialization").HasMaxLength(255).HasConversion(toDb => toDb.Value, fromDb => ProjectDescription.Create(fromDb));
+            builder.Property(d => d.Id).HasColumnName("id").HasConversion(toDb => toDb.Value, fromDb => DoctorID.Create(fromDb));
+            builder.Property(d => d.Account).HasColumnName("account").HasConversion(toDb => toDb.Value, fromDb => Account.Create(fromDb));
+            builder.Property(d => d.Category).HasColumnName("category").HasConversion(toDb => toDb.Value, fromDb => Category.Create(fromDb));
+            builder.Property(d => d.Specialization).HasColumnName("specialization").HasConversion(toDb => toDb.Value, fromDb => Specialization.Create(fromDb));
         }
     }
 }
