@@ -1,4 +1,6 @@
-using System;
+using MyHospital.Domain.Appointment.Enumeration;
+
+sing System;
 using System.Collections.Generic;
 using System.Linq;
 

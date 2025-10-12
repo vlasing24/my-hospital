@@ -1,59 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyHospital.Domain.Appointment
 {
     public class AppointmentStatus
     {
-        public string Name { get; private set; }
-        public int Value { get; private set; }
-
-        private AppointmentStatus(string name, int value)
+        public abstract class AppointmentStatus : Enumeration<AppointmentStatus>
         {
-            Name = name;
-            Value = value;
-        }
-
-        public static readonly AppointmentStatus InConsideration = new AppointmentStatus("В рассмотрении", 1);
-        public static readonly AppointmentStatus InProgress = new AppointmentStatus("В процессе", 2);
-        public static readonly AppointmentStatus Processed = new AppointmentStatus("Обработан", 3);
-        public static readonly AppointmentStatus Rejected = new AppointmentStatus("Отклонен", 4);
-        public static readonly AppointmentStatus Missed = new AppointmentStatus("Пропущен", 5);
-
-
-        public static IEnumerable<AppointmentStatus> GetAll()
-        {
-            return new[] { InConsideration, InProgress, Processed, Rejected, Missed };
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
+            protected AppointmentStatus(int key, string name) : base(key, name)
             {
-                return false;
+
             }
 
-            AppointmentStatus other = (AppointmentStatus)obj;
-            return Value == other.Value;
+            public abstract bool CanCreateComplaint();
+            public abstract bool CanUpdateDiagnosis();
+        }
+        public sealed class AppointmentStatusInConsideration : AppointmentStatus
+        {
+            public AppointmentStatusInConsideration() : base(1, "В рассмотрении") { }
+            public override bool CanCreateComplaint() => false;
+            public override bool CanUpdateDiagnosis() => false;
         }
 
-        public override int GetHashCode()
+        public sealed class AppointmentStatusInProgress : AppointmentStatus
         {
-            return Value.GetHashCode();
+            public AppointmentStatusInProgress() : base(2, "В процессе") { }
+            public override bool CanCreateComplaint() => false;
+            public override bool CanUpdateDiagnosis() => true;
         }
 
-        public override string ToString()
+        public sealed class AppointmentStatusProcessed : AppointmentStatus
         {
-            return Name;
+            public AppointmentStatusProcessed() : base(3, "Обработан") { }
+            public override bool CanCreateComplaint() => true;
+            public override bool CanUpdateDiagnosis() => false;
         }
 
-        public bool CanBeChangedTo(AppointmentStatus newStatus)
+        public sealed class AppointmentStatusRejected : AppointmentStatus
         {
+            public AppointmentStatusRejected() : base(4, "Отклонен") { }
+            public override bool CanCreateComplaint() => false;
+            public override bool CanUpdateDiagnosis() => false;
+        }
 
-            return true;
+        public sealed class AppointmentStatusMissed : AppointmentStatus
+        {
+            public AppointmentStatusMissed() : base(5, "Пропущен") { }
+            public override bool CanCreateComplaint() => false;
+            public override bool CanUpdateDiagnosis() => false;
         }
     }
 }
