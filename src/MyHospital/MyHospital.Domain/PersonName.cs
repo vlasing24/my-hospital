@@ -27,4 +27,9 @@ namespace MyHospital.Domain
             }
             return new PersonName(name, surname, thirdname);
         }
+
+        public override string ToString()
+        {
+            return $"{Surname} {Name} {Thirdname}";
+        }
     }

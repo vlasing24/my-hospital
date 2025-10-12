@@ -10,6 +10,7 @@ namespace MyHospital.Domain.Appointment
     public readonly struct Complaints
     {
         public string Description { get; private set; }
+        public const int MAX_LENGTH = 255;
 
         private Complaint(string description)
         {
@@ -22,6 +23,11 @@ namespace MyHospital.Domain.Appointment
             {
                 throw new ArgumentException("Описание жалобы не может быть пустым.");
             }
+
+            if (value.Length > MAX_LENGTH)
+                throw new ArgumentException(
+                    $"Описание жалоб не может быть больше {MAX_LENGTH} символов"
+                );
 
             return new Complaint(description);
         }
