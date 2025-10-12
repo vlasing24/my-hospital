@@ -1,24 +1,27 @@
 ﻿using MyHospital.Domain.Doctor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyHospital.Domain.Appointment
 {
     public class AppointmentDoctor
     {
         public DoctorId Id { get; private set; }
-        public PersonName Name { get; private set; }
-        public Specialization Specialization { get; private set; }
+        public Doctor Doctor { get; private set; }
 
-
-        private Doctor(DoctorId id, DoctorName name, Specialization specialization)
+        private AppointmentDoctor(DoctorId id, Doctor doctor)
         {
             Id = id;
-            Name = name;
-            Specialization = specialization;
+            Doctor = doctor;
+        }
+
+        public static AppointmentDoctor Create(Doctor doctor)
+        {
+            if (doctor == null)
+            {
+                throw new ArgumentException("Доктор не может быть пустым.");
+            }
+
+            return new AppointmentDoctor(new DoctorId(Guid.NewGuid()), doctor);
         }
     }
 
@@ -34,44 +37,6 @@ namespace MyHospital.Domain.Appointment
         public override string ToString()
         {
             return Value.ToString();
-        }
-    }
-
-    public class PersonName
-    {
-        public string Value { get; }
-
-        public PersonName(string name, string surname, string thirdname)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException("ФИО доктора не может быть пустым.");
-            }
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
-    }
-
-    public class Specialization
-    {
-        public string Value { get; }
-
-        public Specialization(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException("Специализация не может быть пустой.");
-            }
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return Value;
         }
     }
 }

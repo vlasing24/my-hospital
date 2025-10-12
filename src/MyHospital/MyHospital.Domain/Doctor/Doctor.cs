@@ -7,15 +7,15 @@ namespace MyHospital.Domain.Doctor;
 public class Doctor
 {
     public DoctorID ID { get; private set; }
-    public DoctorFullName FullName { get; set; }
+    public PersonName Name { get; private set; }
     public Specialization Specialization { get; set; }
     public Category Category { get; set; }
     public Account Credentials { get; set; }
 
-    public Doctor(ID id, FullName fullName, Specialization specialization, DoctorCategory category, Account credentials)
+    public Doctor(ID id, PersonName name, Specialization specialization, DoctorCategory category, Account credentials)
     {
         ID = id;
-        FullName = fullName;
+        Name = name;
         Specialization = specialization;
         Category = category;
         Credentials = credentials;
@@ -23,6 +23,6 @@ public class Doctor
 
     public override string ToString()
     {
-        return $"Доктор ID: {ID}, Имя: {FullName}, Специализация: {Specialization}";
+        return $"Доктор ID: {ID}, ФИО: {Name}, Специализация: {Specialization}";
     }
 }
