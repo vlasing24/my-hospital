@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Hospital.UseCases\Hospital.UseCases.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Appointment\Configurations\" />
+  </ItemGroup>
+
 </Project>
