@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
+namespace Hospital.Domain.Patient.ValueObjects;
 public record PatientPhone(string Number)
 {
     private static readonly Regex PhoneRegex = new(

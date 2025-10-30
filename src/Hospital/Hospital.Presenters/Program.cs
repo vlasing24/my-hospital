@@ -1,20 +1,17 @@
-using Hospital.Infrastructure.Common;
+using Hospital.Infrastructure;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-DatabaseConnectionOptions? connectionOptions = builder 
-    .Configuration
-    .GetSection(key: nameof(DatabaseConnectionOptions))
-    .Get<DatabaseConnectionOptions>();
+int count = PatientStorage.Patients.Count;
 
-if (connectionOptions == null)
-    throw new ArgumentException();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
-Console.WriteLine(connectionOptions.DatabaseName);
-Console.WriteLine(connectionOptions.UserName);
-Console.WriteLine(connectionOptions.Password);
-Console.WriteLine(connectionOptions.HostName);
+var app = builder.Build();
 
-WebApplication app = builder.Build();
+app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.Run();
