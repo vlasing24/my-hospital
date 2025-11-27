@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hospital.UseCases\Hospital.UseCases.csproj" />
+    <Folder Include="Appointment\Configurations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Appointment\Configurations\" />
+    <ProjectReference Include="..\Hospital.Domain\Hospital.Domain.csproj" />
   </ItemGroup>
 
 </Project>
