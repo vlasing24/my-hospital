@@ -4,6 +4,7 @@ using Hospital.Domain.Utilities;
 using Hospital.Infrastructure;
 using Hospital.UseCases.Patients.Commands;
 using Hospital.UseCases.Patients.DTO;
+using Hospital.UseCases.Patients.Extensions;
 
 namespace Hospital.UseCases.Patients.Handlers
 {
@@ -21,11 +22,11 @@ namespace Hospital.UseCases.Patients.Handlers
 
             var updatedPatient = patient;
 
-            if (!string.IsNullOrEmpty(request.FirstName) || !string.IsNullOrEmpty(request.MiddleName) || !string.IsNullOrEmpty(request.LastName))
+            if (request.Name != null)
             {
-                var newFirstName = request.FirstName ?? patient.FullName.FirstName;
-                var newMiddleName = request.MiddleName ?? patient.FullName.MiddleName;
-                var newLastName = request.LastName ?? patient.FullName.LastName;
+                var newFirstName = request.Name.FirstName ?? patient.FullName.FirstName;
+                var newMiddleName = request.Name.MiddleName ?? patient.FullName.MiddleName;
+                var newLastName = request.Name.LastName ?? patient.FullName.LastName;
 
                 var newFullName = FullName.Create(newFirstName, newMiddleName, newLastName);
                 updatedPatient = updatedPatient.UpdateFullName(newFullName);
@@ -39,21 +40,7 @@ namespace Hospital.UseCases.Patients.Handlers
 
             PatientStorage.Patients[request.Id] = updatedPatient;
 
-            return new PatientResponseDto
-            {
-                Id = updatedPatient.Id.Value,
-                FirstName = updatedPatient.FullName.FirstName,
-                MiddleName = updatedPatient.FullName.MiddleName,
-                LastName = updatedPatient.FullName.LastName,
-                DateOfBirth = updatedPatient.BirthDate.Value,
-                Gender = updatedPatient.Gender.Code,
-                City = updatedPatient.Address.City,
-                Street = updatedPatient.Address.Street,
-                BuildingNumber = updatedPatient.Address.BuildingNumber,
-                ApartmentNumber = updatedPatient.Address.ApartmentNumber,
-                InsuranceNumber = updatedPatient.InsuranceNumber.Number,
-                Phone = updatedPatient.Phone.Number
-            };
+            return patient.ToResponseDto();
         }
     }
 }

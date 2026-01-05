@@ -1,9 +1,9 @@
-﻿namespace Hospital.UseCases.Patients.Commands
+﻿using Hospital.UseCases.Patients.DTO;
+
+namespace Hospital.UseCases.Patients.Commands
 {
     public record UpdatePatientCommand(
         Guid Id,
-        string? FirstName,
-        string? MiddleName,
-        string? LastName,
+        PatientNameDto? Name,
         string? Phone);
 }

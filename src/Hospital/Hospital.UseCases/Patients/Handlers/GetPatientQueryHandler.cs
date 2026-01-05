@@ -1,6 +1,7 @@
 ﻿using Hospital.Domain.Patient;
 using Hospital.Infrastructure;
 using Hospital.UseCases.Patients.DTO;
+using Hospital.UseCases.Patients.Extensions;
 using Hospital.UseCases.Patients.Queries;
 
 namespace Hospital.UseCases.Patients.Handlers
@@ -17,21 +18,7 @@ namespace Hospital.UseCases.Patients.Handlers
             if (!PatientStorage.Patients.TryGetValue(query.Id, out Patient? patient))
                 throw new InvalidOperationException($"Не найден пациент с ID: {query.Id}");
 
-            return new PatientResponseDto
-            {
-                Id = patient.Id.Value,
-                FirstName = patient.FullName.FirstName,
-                MiddleName = patient.FullName.MiddleName,
-                LastName = patient.FullName.LastName,
-                DateOfBirth = patient.BirthDate.Value,
-                Gender = patient.Gender.Code,
-                City = patient.Address.City,
-                Street = patient.Address.Street,
-                BuildingNumber = patient.Address.BuildingNumber,
-                ApartmentNumber = patient.Address.ApartmentNumber,
-                InsuranceNumber = patient.InsuranceNumber.Number,
-                Phone = patient.Phone.Number
-            };
+            return patient.ToResponseDto();
         }
     }
 }

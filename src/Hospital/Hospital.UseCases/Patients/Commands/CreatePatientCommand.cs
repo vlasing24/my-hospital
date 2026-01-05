@@ -1,15 +1,12 @@
-﻿namespace Hospital.UseCases.Patients.Commands
+﻿using Hospital.UseCases.Patients.DTO;
+
+namespace Hospital.UseCases.Patients.Commands
 {
     public record CreatePatientCommand(
-    string FirstName,
-    string? MiddleName,
-    string LastName,
+    PatientNameDto Name,
     DateOnly DateOfBirth,
     string Gender,
-    string City,
-    string Street,
-    string BuildingNumber,
-    string ApartmentNumber,
+    AddressDto Address,
     string InsuranceNumber,
     string Phone);
 }
