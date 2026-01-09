@@ -1,15 +1,11 @@
 ﻿using Hospital.Domain.Doctor.ValueObjects;
 using Hospital.Domain.Utilities;
 
-namespace Hospital.Domain.Doctor;
-
 public class Doctor
 {
-    public DoctorID Id { get; }
-    public FullName FullName { get; }
-    public DoctorSpecialization Specialization { get; }
+    private Doctor() { }
 
-    private Doctor(
+    public Doctor(
         DoctorID id,
         FullName fullName,
         DoctorSpecialization specialization)
@@ -18,6 +14,10 @@ public class Doctor
         FullName = fullName;
         Specialization = specialization;
     }
+
+    public DoctorID Id { get; }
+    public FullName FullName { get; }
+    public DoctorSpecialization Specialization { get; }
 
     public static Doctor Create(
         DoctorID id,

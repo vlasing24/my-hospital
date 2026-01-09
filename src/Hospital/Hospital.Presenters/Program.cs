@@ -1,4 +1,5 @@
 using Hospital.Infrastructure;
+using Hospital.Infrastructure.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ int count = PatientStorage.Patients.Count;
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddPostgres();
 
 var app = builder.Build();
 

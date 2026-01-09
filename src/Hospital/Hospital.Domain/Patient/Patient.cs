@@ -13,6 +13,7 @@ public class Patient
     public PatientInsuranceNumber InsuranceNumber { get; }
     public PatientPhone Phone { get; }
 
+    private Patient() { }
     private Patient(
         PatientID id,
         FullName fullName,
