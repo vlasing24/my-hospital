@@ -1,5 +1,5 @@
 using Hospital.Infrastructure;
-using Hospital.Infrastructure.Common;
+using Hospital.Presenters.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddPostgres();
 
 var app = builder.Build();
+await app.ApplyMigrations();
 
 app.MapControllers();
 app.UseSwagger();
