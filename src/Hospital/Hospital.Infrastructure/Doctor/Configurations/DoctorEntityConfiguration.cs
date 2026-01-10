@@ -13,10 +13,16 @@ public class DoctorEntityConfiguration : IEntityTypeConfiguration<Doctor>
 
         builder.Property(d => d.Id)
             .HasColumnName("id")
-            .HasConversion(toDb => toDb.Value, fromDb => DoctorID.From(fromDb));
+            .HasConversion(
+                toDb => toDb.Value,
+                fromDb => DoctorID.From(fromDb));
 
         builder.Property(d => d.Specialization)
             .HasColumnName("specialization")
-            .IsRequired();
+            .IsRequired()
+            .HasConversion(
+                spec => spec.Name,                   
+                name => DoctorSpecialization.Create(name) 
+            );
     }
 }

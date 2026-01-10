@@ -12,14 +12,14 @@ namespace Hospital.Presenters.Controllers
     {
         private readonly ICreatePatientCommandHandler _createHandler;
         private readonly IGetPatientQueryHandler _getHandler;
-        private readonly IGetAllPatientsQueryHandler _getAllHandler;
+        private readonly IGetPatientQueryHandler _getAllHandler;
         private readonly IUpdatePatientCommandHandler _updateHandler;
         private readonly IDeletePatientCommandHandler _deleteHandler;
 
         public PatientsController(
             ICreatePatientCommandHandler createHandler,
             IGetPatientQueryHandler getHandler,
-            IGetAllPatientsQueryHandler getAllHandler,
+            IGetPatientQueryHandler getAllHandler,
             IUpdatePatientCommandHandler updateHandler,
             IDeletePatientCommandHandler deleteHandler)
         {
@@ -59,21 +59,6 @@ namespace Hospital.Presenters.Controllers
             }
         }
 
-        [HttpGet]
-        public IResult GetAll()
-        {
-            try
-            {
-                var query = new GetAllPatientsQuery();
-                var result = _getAllHandler.Handle(query);
-                return new Envelope(result);
-            }
-            catch (Exception ex)
-            {
-                return new Envelope(HttpStatusCode.BadRequest, ex.Message);
-            }
-        }
-
         [HttpPut("{id:guid}")]
         public IResult Update([FromRoute] Guid id, [FromBody] UpdatePatientCommand command)
         {
@@ -96,7 +81,7 @@ namespace Hospital.Presenters.Controllers
             {
                 var command = new DeletePatientCommand(id);
                 _deleteHandler.Handle(command);
-                return new Envelope(HttpStatusCode.OK, "Patient deleted successfully.");
+                return new Envelope(HttpStatusCode.OK, "Пациент успешно удален");
             }
             catch (InvalidOperationException ex)
             {
