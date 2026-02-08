@@ -1,46 +1,71 @@
-﻿using Hospital.Domain.Patient;
-using Hospital.Domain.Patient.ValueObjects;
+﻿using Hospital.Domain.Patient.ValueObjects;
+using Hospital.Domain.Repositories;
 using Hospital.Domain.Utilities;
-using Hospital.Infrastructure;
+using Hospital.Infrastructure.Common;
 using Hospital.UseCases.Patients.Commands;
 using Hospital.UseCases.Patients.DTO;
 using Hospital.UseCases.Patients.Extensions;
 
-namespace Hospital.UseCases.Patients.Handlers
-{
-    public interface IUpdatePatientCommandHandler
-    {
-        PatientResponseDto Handle(UpdatePatientCommand command);
-    }
+namespace Hospital.UseCases.Patients.Handlers;
 
-    public class UpdatePatientCommandHandler : IUpdatePatientCommandHandler
+public interface IUpdatePatientCommandHandler
+{
+    Task<PatientResponseDto> HandleAsync(
+        UpdatePatientCommand command,
+        CancellationToken ct = default);
+}
+
+public class UpdatePatientCommandHandler(
+    IPatientsRepository patientsRepository,
+    IUnitOfWork unitOfWork,
+    ApplicationDbContext context)
+    : IUpdatePatientCommandHandler
+{
+    public async Task<PatientResponseDto> HandleAsync(
+        UpdatePatientCommand command,
+        CancellationToken ct = default)
     {
-        public PatientResponseDto Handle(UpdatePatientCommand request)
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+
+        try
         {
-            if (!PatientStorage.Patients.TryGetValue(request.Id, out Patient? patient))
-                throw new InvalidOperationException($"Не найден пациент с ID: {request.Id}");
+            var patient = await patientsRepository.GetByIdAsync(
+                command.Id,
+                withLock: true,
+                ct);
+
+            if (patient == null)
+                throw new InvalidOperationException($"Пациент с ID {command.Id} не найден");
 
             var updatedPatient = patient;
 
-            if (request.Name != null)
+            if (command.Name != null)
             {
-                var newFirstName = request.Name.FirstName ?? patient.FullName.FirstName;
-                var newMiddleName = request.Name.MiddleName ?? patient.FullName.MiddleName;
-                var newLastName = request.Name.LastName ?? patient.FullName.LastName;
+                var newFullName = FullName.Create(
+                    command.Name.FirstName ?? patient.FullName.FirstName,
+                    command.Name.MiddleName ?? patient.FullName.MiddleName,
+                    command.Name.LastName ?? patient.FullName.LastName);
 
-                var newFullName = FullName.Create(newFirstName, newMiddleName, newLastName);
                 updatedPatient = updatedPatient.UpdateFullName(newFullName);
             }
 
-            if (!string.IsNullOrEmpty(request.Phone))
+            if (!string.IsNullOrEmpty(command.Phone))
             {
-                var newPhone = PatientPhone.Create(request.Phone);
+                var newPhone = PatientPhone.Create(command.Phone);
                 updatedPatient = updatedPatient.UpdatePhone(newPhone);
             }
 
-            PatientStorage.Patients[request.Id] = updatedPatient;
+            await patientsRepository.UpdateAsync(updatedPatient, ct);
 
-            return patient.ToResponseDto();
+            await unitOfWork.SaveChangesAsync(ct);
+
+            await transaction.CommitAsync();
+
+            return updatedPatient.ToResponseDto();
+        }
+        catch
+        {
+            throw;
         }
     }
 }

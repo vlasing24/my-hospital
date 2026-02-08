@@ -1,19 +1,43 @@
-﻿using Hospital.Infrastructure;
+﻿using Hospital.Domain.Repositories;
+using Hospital.Infrastructure.Common;
 using Hospital.UseCases.Patients.Commands;
 
-namespace Hospital.UseCases.Patients.Handlers
+namespace Hospital.UseCases.Patients.Handlers;
+
+public class DeletePatientCommandHandler(
+    IPatientsRepository patientsRepository,
+    IUnitOfWork unitOfWork,
+    ApplicationDbContext context)
 {
+
     public interface IDeletePatientCommandHandler
     {
-        void Handle(DeletePatientCommand command);
+        Task HandleAsync(DeletePatientCommand command, CancellationToken ct = default);
     }
 
-    public class DeletePatientCommandHandler : IDeletePatientCommandHandler
+    public async Task HandleAsync(DeletePatientCommand command, CancellationToken ct = default)
     {
-        public void Handle(DeletePatientCommand command)
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+
+        try
         {
-            if (!PatientStorage.Patients.Remove(command.Id))
-                throw new InvalidOperationException($"Не найден пациент с ID: {command.Id}");
+            var patient = await patientsRepository.GetByIdAsync(
+                command.Id,
+                withLock: true,
+                ct);
+
+            if (patient == null)
+                throw new InvalidOperationException($"Пациент с ID {command.Id} не найден");
+
+            await patientsRepository.RemoveAsync(patient, ct);
+
+            await unitOfWork.SaveChangesAsync(ct);
+
+            await transaction.CommitAsync(ct);
+        }
+        catch
+        {
+            throw;
         }
     }
 }

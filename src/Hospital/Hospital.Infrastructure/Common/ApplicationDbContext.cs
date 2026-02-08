@@ -1,32 +1,33 @@
 ﻿using Hospital.Domain.Appointment;
 using Hospital.Domain.Patient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Hospital.Infrastructure.Common
+namespace Hospital.Infrastructure.Common;
+
+public sealed class ApplicationDbContext : DbContext
 {
-    public sealed class ApplicationDbContext : DbContext
+    public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Doctor> Doctor => Set<Doctor>();
+
+    private readonly string _connectionString;
+
+    public ApplicationDbContext(IOptions<PostgresConnectionOptions> options)
     {
-        public DbSet<Patient> Patients => Set<Patient>();
-        public DbSet<Appointment> Appointments => Set<Appointment>();
-        public DbSet<Doctor> Doctor => Set<Doctor>();
+        _connectionString = options.Value.AsConnectionString();
+    }
 
-        private readonly string _connectionString;
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseNpgsql(_connectionString)
+            .LogTo(Console.WriteLine, LogLevel.Information);
+    }
 
-        public ApplicationDbContext(IOptions<PostgresConnectionOptions> options)
-        {
-            _connectionString = options.Value.AsConnectionString();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(_connectionString);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

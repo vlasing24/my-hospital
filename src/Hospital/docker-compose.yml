@@ -11,7 +11,7 @@ services:
     ports:
       - "5645:5545"
     volumes:
-      - "postgres_volume:/var/lib/postgresql/data"
+      - "/var/lib/postgresql"
 
   admin:
     image: adminer
