@@ -1,5 +1,4 @@
-﻿using Hospital.Domain.Doctor;
-using Hospital.Domain.Doctor.ValueObjects;
+﻿using Hospital.Domain.Doctors.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

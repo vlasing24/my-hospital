@@ -1,7 +1,7 @@
 ﻿using Hospital.Domain.Appointment;
 using Hospital.Domain.Appointment.ValueObjects;
 using Hospital.Domain.Patient.ValueObjects; 
-using Hospital.Domain.Doctor.ValueObjects;  
+using Hospital.Domain.Doctors.ValueObjects;  
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

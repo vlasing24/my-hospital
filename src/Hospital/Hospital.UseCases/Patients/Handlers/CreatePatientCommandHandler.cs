@@ -1,44 +1,52 @@
 ﻿using Hospital.Domain.Patient;
 using Hospital.Domain.Patient.ValueObjects;
+using Hospital.Domain.Repositories;
 using Hospital.Domain.Utilities;
-using Hospital.Infrastructure;
 using Hospital.UseCases.Patients.Commands;
 using Hospital.UseCases.Patients.DTO;
 using Hospital.UseCases.Patients.Extensions;
 
-namespace Hospital.UseCases.Patients.Handlers
-{
-    public interface ICreatePatientCommandHandler
-    {
-        PatientResponseDto Handle(CreatePatientCommand command);
-    }
+namespace Hospital.UseCases.Patients.Handlers;
 
-    public class CreatePatientCommandHandler : ICreatePatientCommandHandler
+public interface ICreatePatientCommandHandler
+{
+    Task<PatientResponseDto> HandleAsync(CreatePatientCommand command, CancellationToken ct = default);
+}
+
+public class CreatePatientCommandHandler(
+    IPatientsRepository patientsRepository,
+    IUnitOfWork unitOfWork)
+    : ICreatePatientCommandHandler
+{
+    public async Task<PatientResponseDto> HandleAsync(CreatePatientCommand request, CancellationToken ct = default)
     {
-        public PatientResponseDto Handle(CreatePatientCommand request)
-        {
-            var id = PatientID.New();
-            var fullName = FullName.Create(
+        var isUnique = await patientsRepository.IsInsuranceNumberUniqueAsync(
+            PatientInsuranceNumber.Create(request.InsuranceNumber),
+            ct);
+
+        if (!isUnique)
+            throw new InvalidOperationException($"Пациент с номером страхового полиса {request.InsuranceNumber} уже существует");
+
+        var patient = Patient.Create(
+            PatientID.New(),
+            FullName.Create(
                 request.Name.FirstName,
                 request.Name.MiddleName ?? string.Empty,
-                request.Name.LastName
-            );
-            var birthDate = PatientDateOfBirth.Create(request.DateOfBirth);
-            var gender = PatientGender.From(request.Gender);
-
-            var address = PatientAddress.Create(
+                request.Name.LastName),
+            PatientDateOfBirth.Create(request.DateOfBirth),
+            PatientGender.From(request.Gender),
+            PatientAddress.Create(
                 request.Address.City,
                 request.Address.Street,
                 request.Address.BuildingNumber,
-                request.Address.ApartmentNumber
-            );
-            var insurance = PatientInsuranceNumber.Create(request.InsuranceNumber);
-            var phone = PatientPhone.Create(request.Phone);
+                request.Address.ApartmentNumber),
+            PatientInsuranceNumber.Create(request.InsuranceNumber),
+            PatientPhone.Create(request.Phone));
 
-            var patient = Patient.Create(id, fullName, birthDate, gender, address, insurance, phone);
-            PatientStorage.Patients.Add(patient.Id.Value, patient);
+        await patientsRepository.AddAsync(patient, ct);
 
-            return patient.ToResponseDto();
-        }
+        await unitOfWork.SaveChangesAsync(ct);
+
+        return patient.ToResponseDto();
     }
 }

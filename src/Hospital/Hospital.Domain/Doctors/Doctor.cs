@@ -1,4 +1,4 @@
-﻿using Hospital.Domain.Doctor.ValueObjects;
+﻿using Hospital.Domain.Doctors.ValueObjects;
 using Hospital.Domain.Utilities;
 
 public class Doctor

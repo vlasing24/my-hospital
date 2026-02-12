@@ -1,4 +1,5 @@
-﻿using Hospital.Domain.Doctor.ValueObjects;
+﻿
+using Hospital.Domain.Doctors.ValueObjects;
 
 namespace Hospital.Domain.Appointment.ValueObjects;
 
