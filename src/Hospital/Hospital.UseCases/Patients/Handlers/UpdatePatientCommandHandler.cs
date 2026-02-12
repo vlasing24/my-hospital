@@ -1,7 +1,6 @@
 ﻿using Hospital.Domain.Patient.ValueObjects;
 using Hospital.Domain.Repositories;
 using Hospital.Domain.Utilities;
-using Hospital.Infrastructure.Common;
 using Hospital.UseCases.Patients.Commands;
 using Hospital.UseCases.Patients.DTO;
 using Hospital.UseCases.Patients.Extensions;
@@ -10,22 +9,20 @@ namespace Hospital.UseCases.Patients.Handlers;
 
 public interface IUpdatePatientCommandHandler
 {
-    Task<PatientResponseDto> HandleAsync(
-        UpdatePatientCommand command,
-        CancellationToken ct = default);
+    Task<PatientResponseDto> HandleAsync(UpdatePatientCommand command, CancellationToken ct = default);
 }
 
 public class UpdatePatientCommandHandler(
     IPatientsRepository patientsRepository,
     IUnitOfWork unitOfWork,
-    ApplicationDbContext context)
+    ITransactionFactory transactionFactory) 
     : IUpdatePatientCommandHandler
 {
     public async Task<PatientResponseDto> HandleAsync(
         UpdatePatientCommand command,
         CancellationToken ct = default)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+        await using var transaction = await transactionFactory.BeginTransactionAsync(ct);
 
         try
         {
@@ -58,8 +55,7 @@ public class UpdatePatientCommandHandler(
             await patientsRepository.UpdateAsync(updatedPatient, ct);
 
             await unitOfWork.SaveChangesAsync(ct);
-
-            await transaction.CommitAsync();
+            await transaction.CommitAsync(ct);
 
             return updatedPatient.ToResponseDto();
         }

@@ -33,8 +33,8 @@ public class PatientEntityConfiguration : IEntityTypeConfiguration<Patient>
         builder.Property(p => p.Gender)
             .HasColumnName("gender")
             .HasConversion(
-        toDb => toDb.Code,
-        fromDb => PatientGender.From(fromDb));
+                toDb => toDb.Code,
+                fromDb => PatientGender.From(fromDb));
 
         builder.OwnsOne(p => p.Address, addressBuilder =>
         {
@@ -57,14 +57,24 @@ public class PatientEntityConfiguration : IEntityTypeConfiguration<Patient>
 
         builder.Property(p => p.InsuranceNumber)
             .HasColumnName("insurance_number")
-    .HasConversion(
-        toDb => toDb.Number,
-        fromDb => PatientInsuranceNumber.Create(fromDb));
+            .HasConversion(
+                toDb => toDb.Number,
+                fromDb => PatientInsuranceNumber.Create(fromDb))
+            .IsRequired();
 
         builder.Property(p => p.Phone)
             .HasColumnName("phone_number")
             .HasConversion(
                 toDb => toDb.Number,
-                fromDb => PatientPhone.Create(fromDb));
+                fromDb => PatientPhone.Create(fromDb))
+            .IsRequired();
+
+        builder.HasIndex(p => p.InsuranceNumber)
+               .IsUnique()
+               .HasDatabaseName("ix_patients_insurance_number_unique");
+
+        builder.HasIndex(p => p.Phone)
+               .IsUnique()
+               .HasDatabaseName("ix_patients_phone_number_unique");
     }
 }

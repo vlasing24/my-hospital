@@ -1,4 +1,4 @@
-﻿namespace Hospital.Domain.Doctor.ValueObjects;
+﻿namespace Hospital.Domain.Doctors.ValueObjects;
 
 public readonly record struct DoctorID
 {

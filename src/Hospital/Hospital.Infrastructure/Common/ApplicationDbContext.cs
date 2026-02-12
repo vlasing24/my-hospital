@@ -1,5 +1,6 @@
 ﻿using Hospital.Domain.Appointment;
 using Hospital.Domain.Patient;
+using Hospital.Domain.PendingEmail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<Patient> Patients => Set<Patient>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Doctor> Doctor => Set<Doctor>();
+    public DbSet<PendingEmail> PendingEmails => Set<PendingEmail>();
 
     private readonly string _connectionString;
 

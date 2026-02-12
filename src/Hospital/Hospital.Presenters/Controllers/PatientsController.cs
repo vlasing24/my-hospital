@@ -3,7 +3,6 @@ using Hospital.UseCases.Patients.Handlers;
 using Hospital.UseCases.Patients.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using static Hospital.UseCases.Patients.Handlers.DeletePatientCommandHandler;
 
 namespace Hospital.Presenters.Controllers;
 
@@ -91,7 +90,6 @@ public class PatientsController : ControllerBase
     }
 }
 
-// --- Envelope ---
 public class Envelope : IResult
 {
     public int Status { get; }

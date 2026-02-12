@@ -16,5 +16,8 @@ public static class InfrastructureInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IPatientsRepository, PatientsRepository>();
         services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
+        services.AddScoped<IDoctorsRepository, DoctorsRepository>();
+        services.AddScoped<IPendingEmailsRepository, PendingEmailsRepository>();
+        services.AddScoped<ITransactionFactory, TransactionFactory>();
     }
 }
